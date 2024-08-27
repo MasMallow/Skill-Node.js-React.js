@@ -3,11 +3,18 @@ const morgan = require("morgan");
 const { readdirSync } = require("fs");
 const connectDB = require("./Config/db");
 const cors = require('cors')
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 // สร้างแอปพลิเคชัน Express
 const app = express();
-app.use (cors());
+// ตั้งค่า CORS
+app.use(cors({
+    origin: 'http://localhost:3000', // URL ของแอป React
+    credentials: true // อนุญาตให้รับคุกกี้
+}));
+
+app.use(cookieParser());
 
 // ใช้ morgan ในโหมด 'dev' สำหรับการล็อกข้อมูลการร้องขอ
 app.use(morgan("dev"));

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { login } from "../functions/product";
 import { useNavigate } from "react-router-dom";
 
-export const LoginUser = () => {
+const LoginUser = () => {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -17,10 +17,9 @@ export const LoginUser = () => {
         try {
             const result = await login({ userName, password });
             console.log("Login successful:", result);
-            if (result.token) {
-                localStorage.setItem("token", result.token);
-                navigate("/menu");
-            }
+            // การล็อกอินสำเร็จจะจัดการด้วยการตั้งค่า cookie จากเซิร์ฟเวอร์
+            // ไม่มีการจัดเก็บ token ใน localStorage
+            navigate("/menu"); // ไปที่หน้า /menu หลังจากล็อกอินสำเร็จ
         } catch (err) {
             console.log(err);
             setErrorMessage(
@@ -30,6 +29,7 @@ export const LoginUser = () => {
             setLoading(false);
         }
     };
+
     return (
         <div>
             <form onSubmit={handleSubmit}>

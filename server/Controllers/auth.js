@@ -53,12 +53,30 @@ exports.login = async (req, res) => {
             { expiresIn: "1h" }
         );
 
+        res.cookie("auth_token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+        });
+
         res.status(200).json({
             message: "เข้าสู่ระบบสำเร็จ",
-            token: token // ส่ง token กลับไปยัง client
         });
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+    }
+};
+
+exports.checkAuth = (req, res) => {
+    const token = req.cookies.auth_token;
+    if (!token) {
+        return res.status(401).json({ isAuthenticated: false });
+    }
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        res.status(200).json({ isAuthenticated: true });
+    } catch (err) {
+        res.status(401).json({ isAuthenticated: false });
     }
 };

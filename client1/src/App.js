@@ -16,10 +16,7 @@ function App() {
           <Route path="/edit/:id" element={<FromEditProduct />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LoginUser />} />
-          <Route
-            path="/menu"
-            element={<ProtectedRoute element={Fromproduct} />}
-          />
+          <Route path="/menu" element={<ProtectedRoute element={Fromproduct} />} />
         </Routes>
       </div>
     </BrowserRouter>
