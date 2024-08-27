@@ -11,23 +11,23 @@ export const LoginUser = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true); // ตั้งค่าสถานะการโหลดเป็น true
-        setErrorMessage(""); // รีเซ็ตข้อความข้อผิดพลาด
+        setLoading(true);
+        setErrorMessage("");
 
         try {
             const result = await login({ userName, password });
             console.log("Login successful:", result);
             if (result.token) {
-                localStorage.setItem('token', result.token);
-                navigate('/menu');
+                localStorage.setItem("token", result.token);
+                navigate("/menu");
             }
         } catch (err) {
             console.log(err);
             setErrorMessage(
                 "ล็อกอินไม่สำเร็จ: " + (err.message || "กรุณาลองอีกครั้ง")
-            ); 
+            );
         } finally {
-            setLoading(false); // ตั้งค่าสถานะการโหลดเป็น false หลังจากพยายามล็อกอิน
+            setLoading(false);
         }
     };
     return (
@@ -54,10 +54,10 @@ export const LoginUser = () => {
                     />
                 </div>
                 <button type="submit" disabled={loading}>
-                    {loading ? 'Logging in...' : 'Login'}
+                    {loading ? "Logging in..." : "Login"}
                 </button>
             </form>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <a href="/register">สมัครสมาชิก</a>
         </div>
     );

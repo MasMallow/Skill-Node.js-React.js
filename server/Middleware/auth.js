@@ -7,10 +7,6 @@ if (!JWT_SECRET) {
 
 exports.auth = async (req, res, next) => {
     try {
-        const authHeader = req.headers['authorization']; // ใช้ req.headers['authorization'] เพื่อเข้าถึง header
-        if (!authHeader) {
-            return res.status(401).json({ message: "ไม่มีสิทธิ์เข้าถึง3" });
-        }
         const token = authHeader.replace('Bearer ', '').trim();
         if (!token) {
             return res.status(401).json({ message: "Token missing" });

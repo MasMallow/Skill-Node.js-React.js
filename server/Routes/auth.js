@@ -4,6 +4,6 @@ const { registerUser,login,authenticateToken } = require("../Controllers/auth");
 
 router.post("/register", registerUser);
 
-router.post("/login",authenticateToken, login);
+router.post("/login", login);
 
 module.exports = router;

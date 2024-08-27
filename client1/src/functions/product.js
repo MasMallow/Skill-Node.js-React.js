@@ -47,7 +47,7 @@ export const register = async (form) => {
 export const login = async (data) => {
     try {
         const response = await axios.post(
-            `${process.env.REACT_APP_API}/login`,
+            `${process.env.REACT_APP_API}/login`, 
             data
         );
         return response.data;

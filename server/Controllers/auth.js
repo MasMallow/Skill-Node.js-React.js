@@ -62,32 +62,3 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
     }
 };
-
-exports.authenticateToken = async (req, res, next) => {
-    const authHeader = req.header("Authorization")
-    console.log('Authorization Header:', authHeader);
-    if (!authHeader) {
-        return res.status(401).json({ message: "ไม่มีสิทธิ์เข้าถึง1" });
-    }
-    const token = authHeader.replace('Bearer ','').trim();
-    if (!token) {
-        return res.status(401).json({ message: "ไม่มีสิทธิ์เข้าถึง2" });
-    }
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        User.findById(decoded.userId).then((user) => {
-            if (!user || user.token !== token) {
-                return res
-                    .status(401)
-                    .json({ message: "Token ไม่ถูกต้องหรือหมดอายุแล้ว1" });
-            }
-            req.user = user;
-            next();
-        }).catch(err => {
-            console.error('Error fetching user:', err);
-            res.status(500).json({ message: 'Internal server error' });
-        });
-    } catch (err) {
-        return res.status(401).json({ message: "Token ไม่ถูกต้องหรือหมดอายุแล้ว2" });
-    }
-};
