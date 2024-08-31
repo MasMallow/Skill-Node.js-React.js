@@ -5,18 +5,24 @@ import { FromEditProduct } from "./components/FromEditProduct";
 import LoginUser from "./components/LoginUser";
 import Register from "./components/Register";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import  ProtectedRoute  from "./ProtectedRoute";
+import ProtectedRoute from "./ProtectedRoute";
+import React from "react";
+import Header from "./components/Header";
 
 function App() {
   return (
     <BrowserRouter>
-      <div>
-        <h1 className="">From react</h1>
+      <div className="">
+          <div className="name-text">MasMallowZz<span className="zzz">z</span></div>
+          <Header/>
         <Routes>
           <Route path="/edit/:id" element={<FromEditProduct />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LoginUser />} />
-          <Route path="/menu" element={<ProtectedRoute element={Fromproduct} />} />
+          <Route
+            path="/menu"
+            element={<ProtectedRoute element={Fromproduct} />}
+          />
         </Routes>
       </div>
     </BrowserRouter>

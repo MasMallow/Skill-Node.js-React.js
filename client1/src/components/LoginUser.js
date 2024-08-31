@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../functions/product";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const LoginUser = () => {
     const [userName, setUserName] = useState("");
@@ -32,6 +33,7 @@ const LoginUser = () => {
 
     return (
         <div>
+            <Button>Button</Button>
             <form onSubmit={handleSubmit}>
                 <div className="User">
                     <label>User</label>
