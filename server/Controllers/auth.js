@@ -29,6 +29,7 @@ exports.registerUser = async (req, res) => {
         res.status(500).json({ message: "เกิดข้อผิดพลาดในการสมัครสมาชิก" });
     }
 };
+
 exports.login = async (req, res) => {
     try {
         const { userName, password } = req.body;
@@ -60,7 +61,7 @@ exports.login = async (req, res) => {
         });
 
         res.status(200).json({
-            message: "เข้าสู่ระบบสำเร็จ",
+            message: "เข้าสู่ระบบสำเร็จ"
         });
     } catch (err) {
         console.log(err);
@@ -79,4 +80,28 @@ exports.checkAuth = (req, res) => {
     } catch (err) {
         res.status(401).json({ isAuthenticated: false });
     }
+};
+
+exports.getUserFromToken = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId); // ใช้ userId จาก token
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.json({
+            userName: user.userName, // ส่งกลับ userName
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+exports.authenticateToken = (req, res, next) => {
+    const token = req.cookies.auth_token;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: "Forbidden" });
+        req.user = user;
+        next();
+    });
 };

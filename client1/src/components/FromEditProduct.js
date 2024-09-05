@@ -11,7 +11,6 @@ export const FromEditProduct = () => {
         price: "",
     });
 
-    console.log(params.id);
     useEffect(() => {
         loadData(params.id);
     }, [params.id]);

@@ -30,12 +30,13 @@ exports.list = async (req, res) => {
 // สร้าง
 exports.create = async (req, res) => {
     try {
-        console.log(req.body);
-        const producted = await Product(req.body).save();
-        res.send(producted);
+        const productData = { ...req.body, addedBy: req.userName };
+        const product = await Product(productData).save();
+        res.status(201).json(product);
+        console.log(product)
     } catch (err) {
         console.log(err);
-        res.status(500).send("Error");
+        res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
     }
 };
 
@@ -43,7 +44,9 @@ exports.create = async (req, res) => {
 exports.newUpdate = async (req, res) => {
     try {
         const id = req.params.id;
-        const updated = await Product.findOneAndUpdate({ _id: id }, req.body, { new: true }).exec();
+        const updated = await Product.findOneAndUpdate({ _id: id }, req.body, {
+            new: true,
+        }).exec();
         res.send(updated);
     } catch (err) {
         console.log(err);

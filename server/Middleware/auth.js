@@ -6,26 +6,19 @@ if (!JWT_SECRET) {
 }
 
 exports.auth = async (req, res, next) => {
-    try {
-        // ดึงค่า Authorization header
-        const authHeader = req.headers.authorization;
-
-        // ตรวจสอบว่า authHeader มีค่าและเริ่มต้นด้วย 'Bearer '
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ message: "Token missing or malformed" });
-        }
-
-        // ดึงค่า token ออกมาจาก authHeader
-        const token = authHeader.replace('Bearer ', '').trim();
-
-        // ตรวจสอบความถูกต้องของ token
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = decoded; // เก็บข้อมูลผู้ใช้ที่ decode ลงใน req.user
-
-        // ไปยัง middleware ถัดไป
+    const token = req.cookies.auth_token;
+    if (!token) {
+        console.log("Unauthorized")
+        return (
+            res.status(401).json({ message: "Unauthorized" })
+        )
+    }
+    try{
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        req.userName = decoded.userName; // สมมติว่า token มีฟิลด์ userName
         next();
-    } catch (err) {
-        console.error('Authentication error:', err);
-        res.status(401).json({ message: "Token invalid or expired" });
+    }catch(err){
+        console.log("Invalid token")
+        res.status(401).json({ message: "Invalid token" })
     }
 };

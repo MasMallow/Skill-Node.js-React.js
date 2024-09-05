@@ -20,6 +20,8 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const productRoutes = require('./Routes/product');
+app.use('/api', productRoutes); // ตรวจสอบว่ามีการใช้ route อย่างถูกต้อง
 
 // เรียกฟังก์ชันเพื่อเชื่อมต่อกับฐานข้อมูล MongoDB
 connectDB();

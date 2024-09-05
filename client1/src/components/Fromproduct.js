@@ -1,52 +1,83 @@
 import React, { useState, useEffect } from "react";
-import { deleteData,create,getData } from "../functions/product";
-import { Link,useNavigate } from "react-router-dom";
+import { deleteData, create, getData, getUserData } from "../functions/product";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Alert } from "@mui/material";
+import "../css/Fromproduct.css";
 
 export const Fromproduct = () => {
     const [data, setData] = useState([]);
     const [form, setForm] = useState({});
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [userName, setUserName] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
+        const fetchUserData = async ()=>{
+            try{
+                const result = await getUserData();
+                setUserName(result.userName);
+            }catch(err){
+                console.log("Error fetching user data:",err)
+            }
+        }
+        fetchUserData();
         loadData();
     }, []);
 
     const loadData = async () => {
         getData()
-        .then((res)=>setData(res.data))
-        .catch((err)=> console.log(err))
+            .then((res) => setData(res.data))
+            .catch((err) => console.log(err));
     };
+
     const handleChange = (nameInput) => {
         setForm({
             ...form,
-            [nameInput.target.name]: nameInput.target.value
-        })
+            [nameInput.target.name]: nameInput.target.value,
+        });
     };
 
-    const handleDelete = async (id)=>{
-        deleteData(id)
-        .then(res =>{
-            console.log(res)
-            loadData()
-        })
-        .catch((err)=>console.log(err))
-    }
+    const handleDelete = async (id) => {
+        if (window.confirm("พร้อมที่จะลบข้อมูลแล้วใช่มั้ย?")) {
+            deleteData(id)
+                .then((res) => {
+                    console.log(res);
+                    loadData();
+                    setAlertVisible(true);
+                    setTimeout(() => {
+                        setAlertVisible(false);
+                    }, 3000);
+                })
+                .catch((err) => console.log(err));
+        }
+    };
 
-    const handleSubmit = async (data) => {
-        data.preventDefault()
-        create(form)
-            .then(res => {
-                loadData()
-            })
-            .catch((err) => console.log(err))
-    }
-    const handlesignOut = async()=>{
-        localStorage.removeItem("token")
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!userName) {
+            alert("กรุณาเข้าสู่ระบบก่อนเพิ่มข้อมูล");
+            return;
+        }
+        try {
+            await create({ ...form, addedBy: userName });
+            loadData();
+            e.target.reset();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handlesignOut = async () => {
         navigate("/");
-    }
+    };
 
     return (
         <div>
+            {alertVisible && (
+                <Alert severity="success" className="fixed-alert">
+                    This is a success Alert.
+                </Alert>
+            )}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -55,11 +86,23 @@ export const Fromproduct = () => {
                     placeholder="name"
                 />
                 <br />
-                <input type="text" name="detail" onChange={(nameInput) => handleChange(nameInput)} placeholder="detail" />
+                <input
+                    type="text"
+                    name="detail"
+                    onChange={(nameInput) => handleChange(nameInput)}
+                    placeholder="detail"
+                />
                 <br />
-                <input type="text" name="price" onChange={(nameInput) => handleChange(nameInput)} placeholder="price" />
+                <input
+                    type="text"
+                    name="price"
+                    onChange={(nameInput) => handleChange(nameInput)}
+                    placeholder="price"
+                />
                 <br />
-                <button>Submit</button>
+                <Button variant="contained" color="success" type="submit">
+                    Submit
+                </Button>
             </form>
             <table className="table">
                 <thead>
@@ -80,11 +123,17 @@ export const Fromproduct = () => {
                                 <th scope="row">{item.name}</th>
                                 <td>{item.detail || "N/A"}</td>
                                 <td>{item.price || "N/A"}</td>
-                                <td onClick={()=>handleDelete(item._id)}>Delete</td>
                                 <td>
-                                    <Link to = {'/edit/' + item._id}>
-                                    edit
-                                    </Link>
+                                    <Button
+                                        variant="text"
+                                        color="primary"
+                                        onClick={() => handleDelete(item._id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Link to={"/edit/" + item._id}>edit</Link>
                                 </td>
                             </tr>
                         ))
@@ -96,7 +145,9 @@ export const Fromproduct = () => {
                 </tbody>
             </table>
             <div className="sign_out">
-                <button onClick={handlesignOut}>Sign-Out</button>
+                <Button variant="contained" color="error" onClick={handlesignOut}>
+                    Sign-Out
+                </Button>
             </div>
         </div>
     );

@@ -19,7 +19,7 @@ const LoginUser = () => {
             const result = await login({ userName, password });
             console.log("Login successful:", result);
             // การล็อกอินสำเร็จจะจัดการด้วยการตั้งค่า cookie จากเซิร์ฟเวอร์
-            // ไม่มีการจัดเก็บ token ใน localStorage
+            localStorage.setItem("userName", result.userName)
             navigate("/menu"); // ไปที่หน้า /menu หลังจากล็อกอินสำเร็จ
         } catch (err) {
             console.log(err);
@@ -55,9 +55,9 @@ const LoginUser = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <button type="submit" disabled={loading}>
+                <Button variant="contained" type="submit" disabled={loading}>
                     {loading ? "Logging in..." : "Login"}
-                </button>
+                </Button>
             </form>
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <a href="/register">สมัครสมาชิก</a>
