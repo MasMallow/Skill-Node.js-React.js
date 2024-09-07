@@ -13,8 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="">
-          <div className="name-text">MasMallowZz<span className="zzz">z</span></div>
-          <Header/>
+          {/* <Header/> */}
         <Routes>
           <Route path="/edit/:id" element={<FromEditProduct />} />
           <Route path="/register" element={<Register />} />

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { login } from "../functions/product";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, TextField, Box, Grid } from "@mui/material";
+import Grid2 from "@mui/material/Grid2";
+import "../css/Login.css";
 
 const LoginUser = () => {
     const [userName, setUserName] = useState("");
@@ -19,7 +21,7 @@ const LoginUser = () => {
             const result = await login({ userName, password });
             console.log("Login successful:", result);
             // การล็อกอินสำเร็จจะจัดการด้วยการตั้งค่า cookie จากเซิร์ฟเวอร์
-            localStorage.setItem("userName", result.userName)
+            localStorage.setItem("userName", result.userName);
             navigate("/menu"); // ไปที่หน้า /menu หลังจากล็อกอินสำเร็จ
         } catch (err) {
             console.log(err);
@@ -32,36 +34,74 @@ const LoginUser = () => {
     };
 
     return (
-        <div>
-            <Button>Button</Button>
-            <form onSubmit={handleSubmit}>
-                <div className="User">
-                    <label>User</label>
-                    <input
-                        name="userName"
-                        type="text"
-                        value={userName}
-                        placeholder="ชื่อผู้ใช้"
-                        onChange={(e) => setUserName(e.target.value)}
-                    />
-                </div>
-                <div className="Password">
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={password}
-                        placeholder="รหัสผ่าน"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <Button variant="contained" type="submit" disabled={loading}>
-                    {loading ? "Logging in..." : "Login"}
-                </Button>
-            </form>
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            <a href="/register">สมัครสมาชิก</a>
-        </div>
+        <div className="Page-Login">
+            <Box sx={{ height: "100vh" }}>
+                <Grid2 container spacing={2}>
+                    <Grid2 size={6}></Grid2> {/* wallpaper */}
+
+                    <Grid2
+                        size={6}
+                        sx={{
+                            height: "100vh",
+                            display: "flex",
+                            flexDirection: "column"
+                        }}
+                    >
+                        <form onSubmit={handleSubmit} className="From-Login">
+                        <span className="Login-Text">Login</span>
+                            <Grid2 container>
+                                <TextField
+                                    className="Text-Field"
+                                    fullWidth
+                                    size="small"
+                                    label="User"
+                                    variant="filled"
+                                    name="userName"
+                                    value={userName}
+                                    placeholder="ชื่อผู้ใช้"
+                                    onChange={(e) => setUserName(e.target.value)}
+                                />
+                            </Grid2>
+
+                            <Grid2 container >
+                                    <TextField
+                                        className="Text-Field"
+                                        fullWidth
+                                        label="Password"
+                                        type="password"
+                                        name="password"
+                                        size="small"
+                                        variant="filled"
+                                        value={password}
+                                        placeholder="รหัสผ่าน"
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                            </Grid2>
+
+                            <Grid2 container spacing={3}>
+                                <Grid2 xs={12}>
+                                    <Button
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={loading}
+                                        fullWidth
+                                    >
+                                        {loading ? "Logging in..." : "Login"}
+                                    </Button>
+                                </Grid2>
+                            </Grid2>
+                            <Grid2 container spacing={3} justifyContent="center">
+                                <Grid2>
+                                    <a href="/register">สมัครสมาชิก</a>
+                                </Grid2>
+                            </Grid2>
+                        </form>
+                        {errorMessage && <p style={{ color: "red", textAlign: "center" }}>{errorMessage}</p>}
+                    </Grid2>
+
+                </Grid2>
+            </Box>
+        </div >
     );
 };
 
