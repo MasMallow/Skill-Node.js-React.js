@@ -5,5 +5,19 @@
     margin-right: 10% !important;
 }
 .From-Login{
-    margin-top: 20%;
+    margin-top: 25%;
+}
+.From-image{
+    margin-top: 25%;
+    align-items: center;
+    display: flex;
+}
+.Login-Text{
+    margin-left: 10% ;
+    margin-bottom: 3% ;
+    font-size: 20px;
+}
+.Fleeped-Text{
+    font-size: 20px;
+    align-items:start;
 }
