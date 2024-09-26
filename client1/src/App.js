@@ -7,7 +7,6 @@ import Register from "./components/Register";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import React from "react";
-import Header from "./components/Header";
 
 function App() {
   return (

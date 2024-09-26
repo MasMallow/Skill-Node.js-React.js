@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../functions/product";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField, Box, MobileStepper, Grid } from "@mui/material";
+import { Button, TextField, Box } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import "../css/Login.css";
 import CustomGridCarousel from "./ImageSlder";
