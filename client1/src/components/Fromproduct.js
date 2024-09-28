@@ -9,17 +9,19 @@ export const Fromproduct = () => {
     const [form, setForm] = useState({});
     const [alertVisible, setAlertVisible] = useState(false);
     const [userName, setUserName] = useState("");
+    const [userRole, setUserRole] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserData = async ()=>{
-            try{
+        const fetchUserData = async () => {
+            try {
                 const result = await getUserData();
                 setUserName(result.userName);
-            }catch(err){
-                console.log("Error fetching user data:",err)
+                setUserRole(result.role);
+            } catch (err) {
+                console.log("Error fetching user data:", err);
             }
-        }
+        };
         fetchUserData();
         loadData();
     }, []);
@@ -38,6 +40,10 @@ export const Fromproduct = () => {
     };
 
     const handleDelete = async (id) => {
+        if (userRole !== "Admin") {
+            alert("คุณไม่มีสิทธิ์ลบข้อมูล");
+            return;
+        }
         if (window.confirm("พร้อมที่จะลบข้อมูลแล้วใช่มั้ย?")) {
             deleteData(id)
                 .then((res) => {
@@ -54,8 +60,8 @@ export const Fromproduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!userName) {
-            alert("กรุณาเข้าสู่ระบบก่อนเพิ่มข้อมูล");
+        if (userRole !== "Admin") {
+            alert("คุณไม่มีสิทธิ์เพิ่มข้อมูล");
             return;
         }
         try {
@@ -78,32 +84,35 @@ export const Fromproduct = () => {
                     This is a success Alert.
                 </Alert>
             )}
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="name"
-                    onChange={(nameInput) => handleChange(nameInput)}
-                    placeholder="name"
-                />
-                <br />
-                <input
-                    type="text"
-                    name="detail"
-                    onChange={(nameInput) => handleChange(nameInput)}
-                    placeholder="detail"
-                />
-                <br />
-                <input
-                    type="text"
-                    name="price"
-                    onChange={(nameInput) => handleChange(nameInput)}
-                    placeholder="price"
-                />
-                <br />
-                <Button variant="contained" color="success" type="submit">
-                    Submit
-                </Button>
-            </form>
+            <h2>Welcome {userName}</h2>
+            {userRole === "Admin" && (
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        name="name"
+                        onChange={(nameInput) => handleChange(nameInput)}
+                        placeholder="name"
+                    />
+                    <br />
+                    <input
+                        type="text"
+                        name="detail"
+                        onChange={(nameInput) => handleChange(nameInput)}
+                        placeholder="detail"
+                    />
+                    <br />
+                    <input
+                        type="text"
+                        name="price"
+                        onChange={(nameInput) => handleChange(nameInput)}
+                        placeholder="price"
+                    />
+                    <br />
+                    <Button variant="contained" color="success" type="submit">
+                        Submit
+                    </Button>
+                </form>
+            )}
             <table className="table">
                 <thead>
                     <tr>
@@ -111,8 +120,12 @@ export const Fromproduct = () => {
                         <th scope="col">name</th>
                         <th scope="col">detail</th>
                         <th scope="col">price</th>
-                        <th scope="col">action</th>
-                        <th scope="col">Change</th>
+                        {userRole === "Admin" && (
+                            <>
+                                <th scope="col">action</th>
+                                <th scope="col">Change</th>
+                            </>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
@@ -123,18 +136,22 @@ export const Fromproduct = () => {
                                 <th scope="row">{item.name}</th>
                                 <td>{item.detail || "N/A"}</td>
                                 <td>{item.price || "N/A"}</td>
-                                <td>
-                                    <Button
-                                        variant="text"
-                                        color="primary"
-                                        onClick={() => handleDelete(item._id)}
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                                <td>
-                                    <Link to={"/edit/" + item._id}>edit</Link>
-                                </td>
+                                {userRole === "Admin" && (
+                                    <>
+                                        <td>
+                                            <Button
+                                                variant="text"
+                                                color="primary"
+                                                onClick={() => handleDelete(item._id)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </td>
+                                        <td>
+                                            <Link to={"/edit/" + item._id}>edit</Link>
+                                        </td>
+                                    </>
+                                )}
                             </tr>
                         ))
                     ) : (

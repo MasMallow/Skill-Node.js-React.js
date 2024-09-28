@@ -4,6 +4,7 @@ const { readdirSync } = require("fs");
 const connectDB = require("./Config/db");
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
+const session = require("express-session")
 require('dotenv').config();
 
 // สร้างแอปพลิเคชัน Express
@@ -13,6 +14,12 @@ app.use(cors({
     origin: 'http://localhost:3000', // URL ของแอป React
     credentials: true // อนุญาตให้รับคุกกี้
 }));
+app.use(session({
+    secret:'123',
+    resave:false,
+    saveUninitialized:true,
+    cookie:{secure:process.env.NODE_ENV === "production"}
+}))
 
 app.use(cookieParser());
 

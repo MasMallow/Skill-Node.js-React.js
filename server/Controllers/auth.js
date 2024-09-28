@@ -9,6 +9,7 @@ if (!JWT_SECRET) {
 exports.registerUser = async (req, res) => {
     try {
         const { userName, password } = req.body;
+        const role = "User";
 
         if (!userName || !password) {
             return res.status(400).json({ message: "ข้อมูลที่ส่งมาไม่ครบถ้วน" });
@@ -20,7 +21,7 @@ exports.registerUser = async (req, res) => {
         }
 
         const hashPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ userName, password: hashPassword });
+        const newUser = new User({ userName, password: hashPassword, role });
         await newUser.save();
 
         res.status(201).json({ message: "สมัครสมาชิกสำเร็จ" });
@@ -47,6 +48,12 @@ exports.login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: "รหัสผ่านไม่ถูกต้อง" });
         }
+
+        req.session.user = {
+            userId: checkUser._id,
+            userName: checkUser.userName,
+            role: checkUser.role
+        };
 
         const token = jwt.sign(
             { userId: checkUser._id, userName: checkUser.userName },
@@ -89,6 +96,7 @@ exports.getUserFromToken = async (req, res) => {
 
         res.json({
             userName: user.userName, // ส่งกลับ userName
+            role: user.role 
         });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
