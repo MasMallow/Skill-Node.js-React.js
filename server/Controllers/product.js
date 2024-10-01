@@ -68,6 +68,7 @@ exports.remove = async (req, res) => {
 
 exports.search = async (req, res) => {
     try {
+        console.log("Search term:", req.query.term);
         const searchTerm = req.query.term;
 
         // ตรวจสอบว่ามีคำค้นหาหรือไม่
@@ -78,7 +79,6 @@ exports.search = async (req, res) => {
         const products = await Product.find({
             $or: [
                 { name: { $regex: searchTerm, $options: "i" } },  // ค้นหาชื่อที่ไม่สนใจตัวพิมพ์เล็ก-ใหญ่
-                { detail: { $regex: searchTerm, $options: "i" } }, // ค้นหารายละเอียดที่ไม่สนใจตัวพิมพ์เล็ก-ใหญ่
             ],
         });
 
@@ -89,7 +89,7 @@ exports.search = async (req, res) => {
 
         res.json(products); // ส่งกลับรายการสินค้าที่ค้นพบ
     } catch (error) {
-        console.error("Error searching products:", error);
+        console.error("Search error:", error);
         res.status(500).send("เกิดข้อผิดพลาดในการค้นหาสินค้า");
     }
 };

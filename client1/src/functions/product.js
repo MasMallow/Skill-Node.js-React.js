@@ -78,6 +78,9 @@ export const getUserData = async () => {
 };
 
 export const searchData = async (term) => {
-    const response = await axios.get(`/api/product/search?term=${term}`);
+    const response = await axios.get(
+        `${process.env.REACT_APP_API}/search/product?term=${term}`,
+        { withCredentials: true }
+    );
     return response;
 };

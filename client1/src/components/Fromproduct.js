@@ -40,7 +40,7 @@ export const Fromproduct = () => {
                 }, 3000); // Hide alert after 3 seconds
             }
         } else {
-            loadData();
+            // loadData();
         }
     }, [searchTerm]); // เพิ่ม searchTerm เป็น dependency
 
