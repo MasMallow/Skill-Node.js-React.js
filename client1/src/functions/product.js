@@ -1,44 +1,37 @@
 import axios from "axios";
 
 export const getData = async () => {
-    return await axios.get(
-        process.env.REACT_APP_API + "/product",
-        { withCredentials: true },
-    );
+    return await axios.get(process.env.REACT_APP_API + "/product", {
+        withCredentials: true,
+    });
 };
 
 export const deleteData = async (id) => {
-    await axios.delete(
-        process.env.REACT_APP_API + "/product/" + id,
-        { withCredentials: true },
-    );
+    return await axios.delete(process.env.REACT_APP_API + "/product/" + id, {
+        withCredentials: true,
+    });
 };
 
 export const create = async (data) => {
-    await axios.post(
-        process.env.REACT_APP_API + "/product",
-        data,
-        { withCredentials: true },
-    );
+    return await axios.post(process.env.REACT_APP_API + "/product", data, {
+        withCredentials: true,
+    });
 };
 
 export const read = async (id) => {
-    return await axios.get(
-        process.env.REACT_APP_API + "/product/" + id,
-        { withCredentials: true },
-    );
+    return await axios.get(process.env.REACT_APP_API + "/product/" + id, {
+        withCredentials: true,
+    });
 };
 
 export const update = async (id, data) => {
-    return await axios.put(
-        process.env.REACT_APP_API + "/product/" + id,
-        data,
-        { withCredentials: true },
-    );
+    return await axios.put(process.env.REACT_APP_API + "/product/" + id, data, {
+        withCredentials: true,
+    });
 };
 
 export const register = async (form) => {
-    await axios.post(process.env.REACT_APP_API + "/register", form);
+    return await axios.post(process.env.REACT_APP_API + "/register", form);
 };
 
 export const login = async (data) => {
@@ -82,4 +75,9 @@ export const getUserData = async () => {
             throw new Error("Error: " + error.message);
         }
     }
+};
+
+export const searchData = async (term) => {
+    const response = await axios.get(`/api/product/search?term=${term}`);
+    return response;
 };

@@ -6,6 +6,7 @@ const {
     create,
     newUpdate,
     remove,
+    search
 } = require("../Controllers/product");
 const {auth} = require("../Middleware/auth")
 
@@ -14,5 +15,6 @@ router.get("/product/:id",auth, read);
 router.post("/product", auth, create);
 router.put("/product/:id",auth, newUpdate);
 router.delete("/product/:id",auth, remove);
+router.get("/product/search",auth, search);
 
 module.exports = router;

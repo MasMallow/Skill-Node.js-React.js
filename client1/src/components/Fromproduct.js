@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { deleteData, create, getData, getUserData } from "../functions/product";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+    deleteData,
+    create,
+    getData,
+    getUserData,
+    searchData
+} from "../functions/product";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Alert } from "@mui/material";
+import { Button, Alert, TextField } from "@mui/material";
 import "../css/Fromproduct.css";
 
 export const Fromproduct = () => {
@@ -10,7 +16,33 @@ export const Fromproduct = () => {
     const [alertVisible, setAlertVisible] = useState(false);
     const [userName, setUserName] = useState("");
     const [userRole, setUserRole] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
     const navigate = useNavigate();
+
+    const handleSearch = useCallback(async () => {
+        console.log("Searching for:", searchTerm);
+        if (searchTerm) {
+            try {
+                const result = await searchData(searchTerm);
+                setData(result.data);
+                setAlertMessage("Search completed successfully.");
+                setAlertVisible(true);
+                setTimeout(() => {
+                    setAlertVisible(false);
+                }, 3000); // Hide alert after 3 seconds
+            } catch (err) {
+                console.log("Error:", err);
+                setAlertMessage("Error occurred while searching.");
+                setAlertVisible(true);
+                setTimeout(() => {
+                    setAlertVisible(false);
+                }, 3000); // Hide alert after 3 seconds
+            }
+        } else {
+            loadData();
+        }
+    }, [searchTerm]); // เพิ่ม searchTerm เป็น dependency
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -49,6 +81,7 @@ export const Fromproduct = () => {
                 .then((res) => {
                     console.log(res);
                     loadData();
+                    setAlertMessage("Data deleted successfully.");
                     setAlertVisible(true);
                     setTimeout(() => {
                         setAlertVisible(false);
@@ -67,10 +100,20 @@ export const Fromproduct = () => {
         try {
             await create({ ...form, addedBy: userName });
             loadData();
+            setAlertMessage("Data added successfully.");
+            setAlertVisible(true);
+            setTimeout(() => {
+                setAlertVisible(false);
+            }, 3000);
             e.target.reset();
         } catch (err) {
             console.log(err);
         }
+    };
+
+    const handleSearchChange = (e) => {
+        console.log("Search term changed:", e.target.value); // เพิ่ม log นี้
+        setSearchTerm(e.target.value); // ตั้งค่า searchTerm จาก input
     };
 
     const handlesignOut = async () => {
@@ -81,10 +124,21 @@ export const Fromproduct = () => {
         <div>
             {alertVisible && (
                 <Alert severity="success" className="fixed-alert">
-                    This is a success Alert.
+                    {alertMessage}
                 </Alert>
             )}
             <h2>Welcome {userName}</h2>
+            <TextField
+                id="outlined-basic"
+                label="Search"
+                variant="outlined"
+                size="small"
+                value={searchTerm}
+                onChange={handleSearchChange}
+            />
+            <Button variant="contained" color="primary" onClick={handleSearch}>
+                Search
+            </Button>
             {userRole === "Admin" && (
                 <form onSubmit={handleSubmit}>
                     <input

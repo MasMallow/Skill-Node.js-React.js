@@ -65,3 +65,31 @@ exports.remove = async (req, res) => {
         res.status(500).send("Error");
     }
 };
+
+exports.search = async (req, res) => {
+    try {
+        const searchTerm = req.query.term;
+
+        // ตรวจสอบว่ามีคำค้นหาหรือไม่
+        if (!searchTerm || searchTerm.trim() === "") {
+            return res.status(400).send("กรุณาระบุคำค้นหา");
+        }
+
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: searchTerm, $options: "i" } },  // ค้นหาชื่อที่ไม่สนใจตัวพิมพ์เล็ก-ใหญ่
+                { detail: { $regex: searchTerm, $options: "i" } }, // ค้นหารายละเอียดที่ไม่สนใจตัวพิมพ์เล็ก-ใหญ่
+            ],
+        });
+
+        // ถ้าไม่พบสินค้า
+        if (!products.length) {
+            return res.status(404).send("ไม่พบข้อมูล");
+        }
+
+        res.json(products); // ส่งกลับรายการสินค้าที่ค้นพบ
+    } catch (error) {
+        console.error("Error searching products:", error);
+        res.status(500).send("เกิดข้อผิดพลาดในการค้นหาสินค้า");
+    }
+};
