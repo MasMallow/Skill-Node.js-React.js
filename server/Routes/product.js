@@ -11,10 +11,10 @@ const {
 const {auth} = require("../Middleware/auth")
 
 router.get("/product",auth, list);
-router.get("/product/:id",auth, read);
-router.post("/product", auth, create);
-router.put("/product/:id",auth, newUpdate);
-router.delete("/product/:id",auth, remove);
-router.get("/search/product",auth, search);
+router.get("/read/:id",auth, read);
+router.post("/create", auth, create);
+router.put("/newUpdate/:id",auth, newUpdate);
+router.delete("/remove/:id",auth, remove);
+router.get("/search",auth, search);
 
 module.exports = router;

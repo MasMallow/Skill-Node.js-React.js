@@ -7,25 +7,25 @@ export const getData = async () => {
 };
 
 export const deleteData = async (id) => {
-    return await axios.delete(process.env.REACT_APP_API + "/product/" + id, {
+    return await axios.delete(process.env.REACT_APP_API + "/remove/" + id, {
         withCredentials: true,
     });
 };
 
 export const create = async (data) => {
-    return await axios.post(process.env.REACT_APP_API + "/product", data, {
+    return await axios.post(process.env.REACT_APP_API + "/create", data, {
         withCredentials: true,
     });
 };
 
 export const read = async (id) => {
-    return await axios.get(process.env.REACT_APP_API + "/product/" + id, {
+    return await axios.get(process.env.REACT_APP_API + "/read/" + id, {
         withCredentials: true,
     });
 };
 
 export const update = async (id, data) => {
-    return await axios.put(process.env.REACT_APP_API + "/product/" + id, data, {
+    return await axios.put(process.env.REACT_APP_API + "/newUpdate/" + id, data, {
         withCredentials: true,
     });
 };
@@ -79,7 +79,7 @@ export const getUserData = async () => {
 
 export const searchData = async (term) => {
     const response = await axios.get(
-        `${process.env.REACT_APP_API}/search/product?term=${term}`,
+        `${process.env.REACT_APP_API}/search?term=${term}`,
         { withCredentials: true }
     );
     return response;
